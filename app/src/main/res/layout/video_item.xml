@@ -38,8 +38,6 @@
 
     </androidx.cardview.widget.CardView>
 
-
-
     <TextView
         android:id="@+id/video_title"
         android:layout_width="0dp"

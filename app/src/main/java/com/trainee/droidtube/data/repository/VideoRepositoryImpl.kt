@@ -12,7 +12,7 @@ class VideoRepositoryImpl @Inject constructor(
     private val api: HttpClient
 ) : VideoRepository {
     override suspend fun getVideoList(q: String?, type: String, key: String, pageToken: String?): VideoPage {
-        val requestQuery = "search?key=$key&type=$type&q=$q&pageToken=$pageToken"
+        val requestQuery = "search?key=$key&type=$type&q=${q ?: ""}&pageToken=${pageToken ?: ""}"
         return api.get(requestQuery).body()
     }
 

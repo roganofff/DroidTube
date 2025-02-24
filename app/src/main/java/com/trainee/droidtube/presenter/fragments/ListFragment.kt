@@ -1,18 +1,21 @@
 package com.trainee.droidtube.presenter.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.trainee.droidtube.R
 import com.trainee.droidtube.databinding.ListFragmentBinding
 import com.trainee.droidtube.presenter.ListViewModel
 import com.trainee.droidtube.presenter.VideoIntent
 import com.trainee.droidtube.presenter.fragments.adapter.VideoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -39,6 +42,30 @@ class ListFragment : Fragment(R.layout.list_fragment) {
             lifecycleScope.launch {
                 viewModel.intentChannel.send(VideoIntent.WatchVideo(video))
             }
+        }
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+
+        lifecycleScope.launch {
+            viewModel.state.collect { state ->
+                if (state.isLoading) {
+                    binding.progressBar.visibility = View.VISIBLE
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                }
+
+                state.error?.let { error ->
+                    Log.d("ERROR", error)
+                }
+
+                adapter.addVideos(state.videos)
+            }
+        }
+
+        lifecycleScope.launch {
+            val searchRequest = binding.searchField.text.toString()
+            viewModel.intentChannel.send(VideoIntent.LoadVideos(q = searchRequest))
         }
     }
 

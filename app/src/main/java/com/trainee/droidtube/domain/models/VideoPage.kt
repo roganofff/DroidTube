@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VideoPage(
     @SerializedName("items")
-    val videos: List<Video>,
+    val videos: List<Video> = emptyList(),
     val nextPageToken: String,
-    val prevPageToken: String,
 )

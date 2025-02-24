@@ -9,7 +9,9 @@ import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.trainee.droidtube.R
 import com.trainee.droidtube.presenter.fragments.ListFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

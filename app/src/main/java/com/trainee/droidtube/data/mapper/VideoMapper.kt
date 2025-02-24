@@ -1,5 +1,6 @@
 package com.trainee.droidtube.data.mapper
 
+import android.util.Log
 import com.trainee.droidtube.BuildConfig.API_KEY
 import com.trainee.droidtube.domain.VideoRepository
 import com.trainee.droidtube.domain.models.Video
@@ -21,6 +22,7 @@ suspend fun List<Video>.fetchDetailsAndMap(
     this@fetchDetailsAndMap.map { video ->
         async {
             val details = repository.getVideoDetails(video.id.videoId, key = API_KEY)
+            Log.d("5OPKA", details.toString())
             video.provideDetails(details)
         }
     }.awaitAll()

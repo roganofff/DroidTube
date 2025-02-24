@@ -1,5 +1,6 @@
 package com.trainee.droidtube.presenter
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trainee.droidtube.BuildConfig.API_KEY
@@ -47,6 +48,7 @@ class ListViewModel @Inject constructor(
         )
         try {
             val response = repository.getVideoList(q = q, key = API_KEY, pageToken = pageToken)
+            Log.d("STARYY BOG", response.toString())
             _state.value = _state.value.copy(
                 videos = response.videos.fetchDetailsAndMap(repository),
                 isLoading = false,

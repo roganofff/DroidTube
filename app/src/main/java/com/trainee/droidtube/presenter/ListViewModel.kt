@@ -2,6 +2,8 @@ package com.trainee.droidtube.presenter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.trainee.droidtube.BuildConfig.API_KEY
+import com.trainee.droidtube.data.mapper.fetchDetailsAndMap
 import com.trainee.droidtube.domain.VideoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -20,6 +22,8 @@ class ListViewModel @Inject constructor(
     private val _state = MutableStateFlow(VideoViewState())
     val state: StateFlow<VideoViewState> = _state
 
+    private var pageToken: String? = null
+
     init {
         handeIntents()
     }
@@ -27,8 +31,41 @@ class ListViewModel @Inject constructor(
     private fun handeIntents() {
         viewModelScope.launch {
             intentChannel.consumeAsFlow().collect { intent ->
-
+                when (intent) {
+                    is VideoIntent.LoadVideos -> loadVideos(intent.q)
+                    is VideoIntent.WatchVideo -> watchVideo()
+                    is VideoIntent.RefreshVideos -> updateList()
+                }
             }
         }
+    }
+
+    private suspend fun loadVideos(q: String) {
+        _state.value = _state.value.copy(
+            isLoading = true,
+            error = null,
+        )
+        try {
+            val response = repository.getVideoList(q = q, key = API_KEY, pageToken = pageToken)
+            _state.value = _state.value.copy(
+                videos = response.videos.fetchDetailsAndMap(repository),
+                isLoading = false,
+                error = null,
+            )
+            pageToken = response.nextPageToken
+        } catch (e: Exception) {
+            _state.value = _state.value.copy(
+                isLoading = false,
+                error = e.message,
+            )
+        }
+    }
+
+    private suspend fun watchVideo() {
+        TODO("Not yet implemented")
+    }
+
+    private suspend fun updateList() {
+        TODO("Not yet implemented")
     }
 }

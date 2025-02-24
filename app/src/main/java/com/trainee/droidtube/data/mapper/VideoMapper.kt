@@ -3,14 +3,16 @@ package com.trainee.droidtube.data.mapper
 import android.util.Log
 import com.trainee.droidtube.BuildConfig.API_KEY
 import com.trainee.droidtube.domain.VideoRepository
+import com.trainee.droidtube.domain.models.ContentDetails
 import com.trainee.droidtube.domain.models.Video
 import com.trainee.droidtube.domain.models.VideoDetails
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlin.time.Duration
 
 fun Video.provideDetails(details: VideoDetails) : VideoDetails = VideoDetails(
-    videoId = this.id.videoId,
+    id = this.id.videoId,
     snippet = details.snippet,
     contentDetails = details.contentDetails,
     statistics = details.statistics,
@@ -27,3 +29,5 @@ suspend fun List<Video>.fetchDetailsAndMap(
         }
     }.awaitAll()
 }
+
+fun ContentDetails.convertToHMS() : String = Duration.parseIsoString(duration).toString()

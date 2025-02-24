@@ -1,5 +1,6 @@
 package com.trainee.droidtube.data.repository
 
+import com.trainee.droidtube.data.models.VideoDto
 import com.trainee.droidtube.domain.models.VideoPage
 import com.trainee.droidtube.domain.VideoRepository
 import com.trainee.droidtube.domain.models.VideoDetails
@@ -18,6 +19,7 @@ class VideoRepositoryImpl @Inject constructor(
 
     override suspend fun getVideoDetails(id: String, key: String): VideoDetails {
         val requestQuery = "videos?part=snippet%2CcontentDetails%2Cstatistics&id=$id&key=$key"
-        return api.get(requestQuery).body()
+        val videoDetails = (api.get(requestQuery).body() as VideoDto).items[0]
+        return videoDetails
     }
 }

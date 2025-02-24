@@ -1,11 +1,9 @@
 package com.trainee.droidtube.domain.models
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class VideoPage(
-    @SerializedName("items")
-    val videos: List<Video> = emptyList(),
+    val items: List<Video> = emptyList(),
     val nextPageToken: String,
 )

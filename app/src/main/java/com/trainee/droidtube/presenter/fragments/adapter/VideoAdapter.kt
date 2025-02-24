@@ -3,12 +3,12 @@ package com.trainee.droidtube.presenter.fragments.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.trainee.droidtube.data.mapper.convertToHMS
 import com.trainee.droidtube.databinding.VideoItemBinding
 import com.trainee.droidtube.domain.models.VideoDetails
 
 class VideoAdapter(
-    private var videos: List<VideoDetails>,
+    private var videos: MutableList<VideoDetails>,
     private val onVideoClicked: (VideoDetails) -> Unit
 ) : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
 
@@ -17,17 +17,20 @@ class VideoAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(video: VideoDetails) {
-            binding.videoTitle.text = video.snippet.title
-            binding.videoDuration.text = video.contentDetails.duration
-            loadThumbnail(video.snippet.thumbnails.high.url)
+            with(binding)
+            {
+                videoTitle.text = video.snippet.title
+                videoDuration.text = video.contentDetails.convertToHMS()
+                loadThumbnail(video.snippet.thumbnails.high.url)
 
-            binding.root.setOnClickListener {
-                onVideoClicked(video)
+                root.setOnClickListener {
+                    onVideoClicked(video)
+                }
             }
         }
 
         private fun loadThumbnail(url: String) {
-            Glide.with(binding.videoPreview.context)
+            GlideApp.with(itemView.context.applicationContext)
                 .load(url)
                 .into(binding.videoPreview)
         }
@@ -45,8 +48,7 @@ class VideoAdapter(
     override fun getItemCount(): Int = videos.size
 
     fun addVideos(newVideos: List<VideoDetails>) {
-        val startPosition = videos.size
-        this.videos += newVideos
-        notifyItemRangeInserted(startPosition, newVideos.size)
+        this.videos = newVideos.toMutableList()
+        notifyDataSetChanged()
     }
 }

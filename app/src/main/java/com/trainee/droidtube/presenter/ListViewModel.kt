@@ -26,10 +26,10 @@ class ListViewModel @Inject constructor(
     private var pageToken: String? = null
 
     init {
-        handeIntents()
+        handleIntents()
     }
 
-    private fun handeIntents() {
+    private fun handleIntents() {
         viewModelScope.launch {
             intentChannel.consumeAsFlow().collect { intent ->
                 when (intent) {
@@ -50,10 +50,11 @@ class ListViewModel @Inject constructor(
             val response = repository.getVideoList(q = q, key = API_KEY, pageToken = pageToken)
             Log.d("STARYY BOG", response.toString())
             _state.value = _state.value.copy(
-                videos = response.videos.fetchDetailsAndMap(repository),
+                videos = _state.value.videos + response.items.fetchDetailsAndMap(repository),
                 isLoading = false,
                 error = null,
             )
+
             pageToken = response.nextPageToken
         } catch (e: Exception) {
             _state.value = _state.value.copy(

@@ -15,7 +15,6 @@ import com.trainee.droidtube.presenter.ListViewModel
 import com.trainee.droidtube.presenter.VideoIntent
 import com.trainee.droidtube.presenter.fragments.adapter.VideoAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -38,7 +37,7 @@ class ListFragment : Fragment(R.layout.list_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = VideoAdapter(emptyList()) { video ->
+        adapter = VideoAdapter(mutableListOf()) { video ->
             lifecycleScope.launch {
                 viewModel.intentChannel.send(VideoIntent.WatchVideo(video))
             }
@@ -59,12 +58,14 @@ class ListFragment : Fragment(R.layout.list_fragment) {
                     Log.d("ERROR", error)
                 }
 
+                Log.d("FRAG", "Adding ${state.videos}")
                 adapter.addVideos(state.videos)
             }
         }
 
         lifecycleScope.launch {
-            val searchRequest = binding.searchField.text.toString()
+//            val searchRequest = binding.searchField.text.toString()
+            val searchRequest = "video 1 day long"
             viewModel.intentChannel.send(VideoIntent.LoadVideos(q = searchRequest))
         }
     }

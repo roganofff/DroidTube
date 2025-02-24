@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VideoDetails(
-    val videoId: String,
+    val id: String,
     val snippet: Snippet,
     val contentDetails: ContentDetails,
     val statistics: Statistics,

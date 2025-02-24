@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.converter.gson)
     implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+    kapt(libs.compiler)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)

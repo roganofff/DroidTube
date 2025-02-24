@@ -44,5 +44,9 @@ class VideoAdapter(
 
     override fun getItemCount(): Int = videos.size
 
-
+    fun addVideos(newVideos: List<VideoDetails>) {
+        val startPosition = videos.size
+        this.videos += newVideos
+        notifyItemRangeInserted(startPosition, newVideos.size)
+    }
 }
